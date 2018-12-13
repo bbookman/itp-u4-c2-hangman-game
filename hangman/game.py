@@ -1,18 +1,34 @@
 from .exceptions import *
+import random
 
 # Complete with your own, just for fun :)
-LIST_OF_WORDS = []
+LIST_OF_WORDS = ['Betty', 'Barny', 'Wilma', 'Fred', 'Sonic', 'Alphabet', 'Fortune', 'Fortnight', 'Assume', 'Exhausted']
 
 
 def _get_random_word(list_of_words):
-    pass
-
+    if not list_of_words:
+        raise InvalidListOfWordsException()
+    if len(list_of_words) == 0:
+        raise IndexError()
+    return random.choice(list_of_words)
 
 def _mask_word(word):
-    pass
+    if not word:
+        raise InvalidWordException()
+    result = ''
+    for letter in word:
+        result += '*'
+    return result
+
+#Given a word like 'Python', it returns it "masked" (replacing real characters with asterisks): '******'
 
 
 def _uncover_word(answer_word, masked_word, character):
+    if not answer_word or not masked_word or len(answer_word) == 0 or len(masked_word) == 0 or (len(masked_word) != len(answer_word)    ) :
+        raise InvalidWordException()
+    if len(character) > 1 or not character:
+        raise InvalidGuessedLetterException()
+        
     pass
 
 
