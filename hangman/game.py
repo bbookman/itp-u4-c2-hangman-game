@@ -57,28 +57,22 @@ def is_game_finished(game):
     if state == 'win' or state == 'lost':
         return True
     return False
-        
-        
-def raise_for_game_state(game, letter):
-    if is_game_finished(game):
-        raise GameFinishedException
-    if is_game_lost(game, letter):
-        raise GameLostException
-    if is_game_won(game, letter):
-        raise GameWonException
 
-        
 def guess_letter(game, letter):
-    raise_for_game_state(game, letter)
-    if game['masked_word'] == _uncover_word(game['answer_word'], game['masked_word'], letter):
-        misses = game['remaining_misses'] - 1
-        game['remaining_misses'] = misses
-        raise_for_game_state(game, letter)
-    else:
+    if game['remaining_misses'] == 0 or game['masked_word'] == game['answer_word']:
+        raise GameFinishedException
+    if letter.lower() in game['answer_word'].lower():
         game['masked_word'] = _uncover_word(game['answer_word'], game['masked_word'], letter)
-    raise_for_game_state(game, letter)
-    game['previous_guesses'].append(letter.lower())
-    
+        game['previous_guesses'].append(letter.lower())
+        if game['masked_word'] == game['answer_word']:
+            raise GameWonException
+    else:
+        game['previous_guesses'].append(letter.lower())
+        game['remaining_misses'] -= 1
+        if game['remaining_misses'] <= 0 :
+            raise GameLostException
+        
+        
 def start_new_game(list_of_words=None, number_of_guesses=5):
     if list_of_words is None:
         list_of_words = LIST_OF_WORDS
